@@ -1,0 +1,256 @@
+:root {
+  --paper:       #F7F4EE;
+  --ink:         #1B1A17;
+  --rule:        #D8D2C4;
+  --accent:      #7A2E2A;
+  --accent-soft: #F1E2E1;
+
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+  font-size: 17px;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+header,
+main,
+footer {
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem;
+}
+
+header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+h1 {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.75rem;
+  color: var(--accent);
+  letter-spacing: -0.005em;
+}
+
+.today {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+  opacity: 0.62;
+  font-style: italic;
+}
+
+main {
+  padding-top: 0;
+}
+
+h2 {
+  margin: 0 0 1rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: 0.002em;
+}
+
+.composer {
+  margin-bottom: 2.5rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.55rem 0.7rem;
+  line-height: 1.45;
+  transition: border-color 120ms;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.35rem;
+}
+
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 2px;
+  padding: 0.55rem 1.2rem;
+  cursor: pointer;
+  transition: color 120ms, border-color 120ms, background-color 120ms;
+}
+
+button[type="button"] {
+  color: var(--ink);
+  background: transparent;
+  border-color: var(--ink);
+}
+
+button[type="button"]:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+#status {
+  margin: 0.85rem 0 0;
+  min-height: 1.2em;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+#status[data-kind="error"] {
+  background: var(--accent-soft);
+  color: var(--ink);
+  padding: 0.5rem 0.7rem;
+  border-radius: 2px;
+  font-style: normal;
+}
+
+.list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list li {
+  padding: 1rem 0;
+  border-top: 1px solid var(--rule);
+}
+
+.list li:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.list li.empty {
+  color: var(--ink);
+  opacity: 0.55;
+  font-style: italic;
+  border-top: none;
+  padding: 0;
+  animation: empty-fade-in 400ms ease-out;
+}
+
+.list .note-title {
+  margin: 0 0 0.35rem;
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+}
+
+.list .note-body {
+  margin: 0 0 0.55rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.list .note-meta {
+  margin: 0 0 0.6rem;
+  font-size: 0.85rem;
+  opacity: 0.6;
+  font-style: italic;
+}
+
+.list .note-meta time {
+  font-style: italic;
+}
+
+.list .note button {
+  font-size: 0.9rem;
+  padding: 0.3rem 0.75rem;
+}
+
+footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 1.25rem;
+  font-size: 0.85rem;
+  opacity: 0.55;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@keyframes empty-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 32rem) {
+  header,
+  main,
+  footer {
+    padding: 1.25rem 1rem;
+  }
+
+  header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}

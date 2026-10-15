@@ -11,6 +11,9 @@ npm start        # boots the server on http://127.0.0.1:3000
 npm test         # runs the Jest + supertest integration suite (jest --runInBand)
 ```
 
+## Web UI
+Após rodar `npm start`, abra `http://localhost:3000/` no navegador — a interface web é servida de `public/` e consome a mesma API acima.
+
 ### Endpoints
 
 | Method | Route        | Behavior                                       | Status      |
