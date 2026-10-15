@@ -4,36 +4,103 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>QuickNotes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script defer src="app.js"></script>
   </head>
   <body>
-    <header>
+    <header class="topbar">
       <h1>QuickNotes</h1>
-      <p class="today" id="today"></p>
+      <p class="counter" id="counter"><strong>0</strong> nota(s)</p>
     </header>
-    <main>
-      <section class="composer">
-        <h2>Nova nota</h2>
-        <form id="note-form" novalidate>
+
+    <main class="board">
+      <section class="composer" id="composer" aria-labelledby="composer-title">
+        <h2 id="composer-title">Nova nota</h2>
+        <form id="note-form" data-mode="create" novalidate>
           <label for="title">Título</label>
           <input id="title" name="title" type="text" maxlength="200" required autocomplete="off">
+
           <label for="body">Conteúdo</label>
           <textarea id="body" name="body" rows="4" required></textarea>
-          <div class="actions">
-            <button type="submit">Salvar</button>
+
+          <div class="form-actions">
+            <button type="button" id="cancel-edit" hidden>Cancelar</button>
+            <button type="submit" id="submit-note">Salvar</button>
           </div>
         </form>
-        <p id="status" role="status" aria-live="polite"></p>
       </section>
 
-      <section class="list">
-        <h2>Notas</h2>
-        <ul id="notes-list"></ul>
+      <section class="searchbar">
+        <label class="visually-hidden" for="search">Buscar</label>
+        <input id="search" type="search" placeholder="Buscar por título ou mensagem…" autocomplete="off">
       </section>
+
+      <section class="grid" id="grid" aria-live="polite"></section>
+
+      <div class="empty-state empty-zero" id="empty-zero" hidden>
+        <svg class="empty-illustration" viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="36" y="18" width="74" height="92" rx="3" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="2"/>
+          <path d="M88 24 L132 68 L116 84 L72 40 Z" fill="#FEF3C7" stroke="#B45309" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M72 40 L64 32 L56 40 L64 48 Z" fill="#9CA3AF" stroke="#6B7280" stroke-width="1.5" stroke-linejoin="round"/>
+          <line x1="84" y1="32" x2="128" y2="76" stroke="#B45309" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="100" y1="48" x2="112" y2="60" stroke="#B45309" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        <p>Sua primeira nota está aqui embaixo</p>
+        <svg class="empty-arrow" viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M40 56 Q 40 24 18 6" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+          <path d="M10 12 L 18 6 L 24 14" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="empty-state empty-search" id="empty-search" hidden>
+        <p>Nenhuma nota encontrada para '<span id="search-term"></span>'</p>
+        <button type="button" id="clear-search">Limpar busca</button>
+      </div>
     </main>
-    <footer>
-      <p>QuickNotes · notas salvas no servidor local.</p>
-    </footer>
+
+    <template id="note-template">
+      <article class="note">
+        <svg class="pin" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="9" cy="6" r="3" fill="#9CA3AF"/>
+          <path d="M9 8 L9 17" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+        <h3 class="note-title"></h3>
+        <p class="note-body"></p>
+        <footer class="note-actions">
+          <button type="button" data-action="edit" aria-label="Editar">
+            <svg class="icon-edit" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"/>
+              <path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/>
+            </svg>
+          </button>
+          <button type="button" data-action="delete" aria-label="Excluir">
+            <svg class="icon-trash" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <path d="M10 11v6"/>
+              <path d="M14 11v6"/>
+              <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+          </button>
+        </footer>
+      </article>
+    </template>
+
+    <dialog id="confirm-dialog" class="confirm" aria-labelledby="confirm-title">
+      <form method="dialog">
+        <h2 id="confirm-title">Excluir esta nota?</h2>
+        <p class="confirm-preview">
+          <strong class="confirm-title"></strong>
+          <span class="confirm-body"></span>
+        </p>
+        <div class="confirm-actions">
+          <button type="submit" value="cancel" autofocus>Cancelar</button>
+          <button type="submit" value="confirm" class="danger">Excluir</button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>
