@@ -64,6 +64,34 @@ function build(db) {
     return res.status(204).send();
   });
 
+  // PUT /notes/:id
+  router.put('/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+    const { title, body } = req.body || {};
+    if (typeof title !== 'string' || title.trim().length === 0) {
+      return res.status(400).json({ error: 'title is required and must be a non-empty string' });
+    }
+    if (title.trim().length > 200) {
+      return res.status(400).json({ error: 'title must be at most 200 characters' });
+    }
+    if (typeof body !== 'string' || body.length === 0) {
+      return res.status(400).json({ error: 'body is required and must be a non-empty string' });
+    }
+    const info = db
+      .prepare('UPDATE notes SET title = ?, body = ? WHERE id = ?')
+      .run(title.trim(), body, id);
+    if (info.changes === 0) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+    const row = db
+      .prepare('SELECT id, title, body, created_at FROM notes WHERE id = ?')
+      .get(id);
+    return res.status(200).json(row);
+  });
+
   return router;
 }
 
